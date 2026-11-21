@@ -21,7 +21,8 @@ Repo: github.com/ilkinQuliyev123/savor-app (public)
 - [x] Screens: Menu (category chips), Dish detail, Cart, Orders (live status Preparing -> On the way -> Delivered), Reserve (date/time/guests/name)
 - [x] Fixed bug: "+" button nested inside a Link also navigated; keep action buttons outside Link
 - [x] E2E (Playwright on `expo export --platform web`, mobile viewport): 12 checks pass; `npx tsc --noEmit` clean
-- [ ] GitHub repo pushed
+- [x] PLAN.md written. Libraries added: lucide-react-native + react-native-svg, zustand + AsyncStorage persist, expo-haptics. Context store replaced by src/lib/store.ts. Cart persistence verified; 12 E2E checks pass, tsc clean.
+- [x] GitHub repo pushed
 - [ ] Screenshots into portfolio card
 ## Gotchas
 - This folder sits inside the Desktop git repo: always `git init` inside the project folder before committing, never `git add` from the parent.

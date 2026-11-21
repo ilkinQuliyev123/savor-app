@@ -1,24 +1,24 @@
 import { Link } from 'expo-router'
+import { Plus } from 'lucide-react-native'
 import { useState } from 'react'
 import { FlatList, Pressable, ScrollView, Text, View } from 'react-native'
 import { categories, dishes, money } from '@/lib/data'
-import { useApp } from '@/lib/store'
+import { tap } from '@/lib/haptics'
+import { useStore } from '@/lib/store'
 
 export default function Menu() {
   const [cat, setCat] = useState<string>(categories[0])
-  const { add } = useApp()
+  const add = useStore((s) => s.add)
 
   return (
     <View className="flex-1">
-      <View>
-        <ScrollView horizontal showsHorizontalScrollIndicator={false} contentContainerClassName="gap-2 px-4 py-3">
-          {categories.map((c) => (
-            <Pressable key={c} accessibilityRole="button" onPress={() => setCat(c)} className={`rounded-full border px-4 py-2 ${cat === c ? 'border-brand bg-brand' : 'border-black/10 bg-white'}`}>
-              <Text className={`text-sm font-medium ${cat === c ? 'text-white' : 'text-ink'}`}>{c}</Text>
-            </Pressable>
-          ))}
-        </ScrollView>
-      </View>
+      <ScrollView horizontal showsHorizontalScrollIndicator={false} className="grow-0" contentContainerClassName="gap-2 px-4 py-3">
+        {categories.map((c) => (
+          <Pressable key={c} accessibilityRole="button" onPress={() => setCat(c)} className={`rounded-full border px-4 py-2 ${cat === c ? 'border-brand bg-brand' : 'border-black/10 bg-white'}`}>
+            <Text className={`text-sm font-medium ${cat === c ? 'text-white' : 'text-ink'}`}>{c}</Text>
+          </Pressable>
+        ))}
+      </ScrollView>
       <FlatList
         data={dishes.filter((d) => d.cat === cat)}
         keyExtractor={(d) => d.id}
@@ -37,8 +37,12 @@ export default function Menu() {
                 </View>
               </Pressable>
             </Link>
-            <Pressable accessibilityLabel={`Add ${d.name}`} onPress={() => add(d.id)} className="size-9 items-center justify-center rounded-full bg-brand active:opacity-80">
-              <Text className="text-xl leading-6 text-white">+</Text>
+            <Pressable
+              accessibilityLabel={`Add ${d.name}`}
+              onPress={() => { tap(); add(d.id) }}
+              className="size-9 items-center justify-center rounded-full bg-brand active:opacity-80"
+            >
+              <Plus color="#fff" size={20} />
             </Pressable>
           </View>
         )}

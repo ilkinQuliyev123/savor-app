@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { Pressable, ScrollView, Text, TextInput, View } from 'react-native'
-import { useApp } from '@/lib/store'
+import { Minus, Plus } from 'lucide-react-native'
+import { tap } from '@/lib/haptics'
+import { useStore } from '@/lib/store'
 
 const days = Array.from({ length: 6 }, (_, i) => {
   const d = new Date(Date.now() + i * 864e5)
@@ -15,7 +17,8 @@ const Chip = ({ label, on, press }: { label: string; on: boolean; press: () => v
 )
 
 export default function Reserve() {
-  const { book, bookings } = useApp()
+  const book = useStore((s) => s.book)
+  const bookings = useStore((s) => s.bookings)
   const [day, setDay] = useState(days[0])
   const [time, setTime] = useState(times[4])
   const [guests, setGuests] = useState(2)
@@ -37,16 +40,16 @@ export default function Reserve() {
       <View className="flex-row items-center justify-between rounded-2xl bg-white p-3">
         <Text className="font-semibold text-ink">Guests</Text>
         <View className="flex-row items-center gap-4">
-          <Pressable accessibilityLabel="Fewer guests" onPress={() => setGuests((g) => Math.max(1, g - 1))} className="size-9 items-center justify-center rounded-full bg-soft"><Text className="text-lg text-ink">−</Text></Pressable>
+          <Pressable accessibilityLabel="Fewer guests" onPress={() => setGuests((g) => Math.max(1, g - 1))} className="size-9 items-center justify-center rounded-full bg-soft"><Minus color="#1f2328" size={16} /></Pressable>
           <Text className="w-5 text-center text-base font-semibold text-ink">{guests}</Text>
-          <Pressable accessibilityLabel="More guests" onPress={() => setGuests((g) => Math.min(12, g + 1))} className="size-9 items-center justify-center rounded-full bg-soft"><Text className="text-lg text-ink">+</Text></Pressable>
+          <Pressable accessibilityLabel="More guests" onPress={() => setGuests((g) => Math.min(12, g + 1))} className="size-9 items-center justify-center rounded-full bg-soft"><Plus color="#1f2328" size={16} /></Pressable>
         </View>
       </View>
       <TextInput value={name} onChangeText={(t) => { setName(t); setDone(false) }} placeholder="Your name" placeholderTextColor="#9aa0a6" className="rounded-2xl bg-white px-4 py-3 text-base text-ink" />
       <Pressable
         accessibilityRole="button"
         disabled={!name.trim()}
-        onPress={() => { book({ day, time, guests, name: name.trim() }); setName(''); setDone(true) }}
+        onPress={() => { tap(); book({ day, time, guests, name: name.trim() }); setName(''); setDone(true) }}
         className={`items-center rounded-full py-4 ${name.trim() ? 'bg-brand active:opacity-80' : 'bg-brand/40'}`}
       >
         <Text className="font-semibold text-white">Reserve table</Text>
